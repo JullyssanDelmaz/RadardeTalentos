@@ -3,7 +3,7 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect
 from .services import criar_aluno
 from .models import Aluno, Escola
-from .forms import AlunoForm, EscolaForm, OlheiroForm
+from .forms import AlunoForm, EscolaForm, observador_tecnicoForm
 from django.contrib.auth.models import Group
 
 def  home_view(request):
@@ -13,7 +13,7 @@ def  home_view(request):
 
 def cadastro_view(request):
     escola_form = EscolaForm(request.POST or None, prefix="escola")
-    olheiro_form = OlheiroForm(request.POST or None, prefix="olheiro")
+    observador_tecnico_form = observador_tecnicoForm(request.POST or None, prefix="observador_tecnico")
 
     if request.method == "POST":
         tipo = request.POST.get("tipo")
@@ -40,19 +40,39 @@ def cadastro_view(request):
             return redirect("login")
 
 
-        if tipo == "Olheiro" and olheiro_form.is_valid():
-            user = olheiro_form.save(commit=False)
-            password = olheiro_form.cleaned_data["password"]
+        if tipo == "observador_tecnico" and observador_tecnico_form.is_valid():
+            user = observador_tecnico_form.save(commit=False)
+            password = observador_tecnico_form.cleaned_data["password"]
             user.set_password(password)
             user.save()
 
-            grupo = Group.objects.get(name="Olheiro")
+            grupo = Group.objects.get(name="observador_tecnico")
             user.groups.add(grupo)
+
+            observador_tecnico.objects.create(
+                user=user, 
+                nome=observador_tecnico_form.cleaned_data["nome"], 
+                cpf=observador_tecnico_form.cleaned_data["cpf"], 
+                celular=observador_tecnico_form.cleaned_data["celular"], 
+                cargo=observador_tecnico_form.cleaned_data["cargo"], 
+                clube=observador_tecnico_form.cleaned_data["clube"], 
+                documento_identificacao=observador_tecnico_form.cleaned_data["documento_identificacao"], 
+                foto_perfil=observador_tecnico_form.cleaned_data["foto_perfil"], 
+                linkedin=observador_tecnico_form.cleaned_data["linkedin"], 
+                certificacoes=observador_tecnico_form.cleaned_data["certificacoes"], 
+                certificacoes_arquivo=observador_tecnico_form.cleaned_data["certificacoes_arquivo"], 
+                estado=observador_tecnico_form.cleaned_data["estado"], 
+                cidade=observador_tecnico_form.cleaned_data["cidade"],
+                telefone=observador_tecnico_form.cleaned_data["telefone"], 
+                notificacoes=observador_tecnico_form.cleaned_data["notificacoes"], 
+                categorias_interesse=observador_tecnico_form.cleaned_data["categorias_interesse"], 
+                posicoes_preferenciais=observador_tecnico_form.cleaned_data["posicoes_preferenciais"],
+            )
 
             return redirect("login")
     return render(request, "core/cadastro.html", {
         "escola_form": escola_form, 
-        "olheiro_form":olheiro_form,
+        "observador_tecnico_form":observador_tecnico_form,
         })
 
 def criar_aluno_view(request):
@@ -85,7 +105,7 @@ def dashboard_redirect(user):
     if user.groups.filter(name='Aluno').exists():
         return 'dashboard_aluno'
 
-    return 'dashboard_olheiro'
+    return 'dashboard_observador_tecnico'
 
 @login_required
 def redirect_pos_login(request):

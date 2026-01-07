@@ -5,7 +5,7 @@ from django.db import migrations
 def criar_grupos(apps, schema_editor):
     Group = apps.get_model('auth', 'Group')
 
-    for nome in ['Escola', 'Aluno', 'Olheiro']:
+    for nome in ['Escola', 'Aluno', 'observador_tecnico']:
         Group.objects.get_or_create(name=nome)
 
 class Migration(migrations.Migration):
