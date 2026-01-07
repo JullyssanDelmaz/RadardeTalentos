@@ -5,6 +5,11 @@ from django.contrib.auth.models import User
 class Escola(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nome = models.CharField(max_length=100)
+    diretor = models.CharField(max_length=100)
+    cnpj = models.CharField(max_length=18)
+    razao_social = models.CharField(max_length=250)
+    telefone = models.CharField(max_length=11)
+    celular = models.CharField(max_length=12)
     cidade = models.CharField(max_length=100)
 
     def __str__(self):

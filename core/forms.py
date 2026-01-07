@@ -7,8 +7,11 @@ from .models import Aluno, Time
 # Form base de usuário
 # ----------------------
 class UserBaseForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
-
+    username = forms.CharField(label="Nome de Usuário")
+    email = forms.EmailField(label="E-mail")
+    password = forms.CharField(
+        widget=forms.PasswordInput,
+        label="Senha")
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
@@ -35,3 +38,40 @@ class AlunoForm(UserBaseForm):
 
         if escola:
             self.fields['time'].queryset = Time.objects.filter(escola=escola)
+
+
+# ----- ESCOLA ----- 
+
+class EscolaForm(UserBaseForm):
+    nome = forms.CharField(label="Nome da Escola")
+    diretor = forms.CharField(label="Diretor")
+    cnpj = forms.CharField(label="CNPJ")
+    razao_social = forms.CharField(label="Razão Social")
+    cidade = forms.CharField(label="Cidade")
+    celular = forms.CharField(label="Celular")
+    telefone = forms.CharField(label="Telefone")
+
+
+    class Meta(UserBaseForm.Meta):
+        fields = UserBaseForm.Meta.fields + [
+            'nome',
+            'diretor',
+            'cnpj',
+            'razao_social',
+            'cidade',
+            'telefone',
+            'celular',
+        ]
+
+class OlheiroForm(UserBaseForm):
+    nome = forms.CharField(label="Nome Completo")
+    cpf = forms.CharField(label="CPF")
+    telefone = forms.CharField(label="telefone")
+    time = forms.CharField(label="Time")
+    class Meta(UserBaseForm.Meta):
+        fields = UserBaseForm.Meta.fields + [
+            "nome",
+            "cpf",
+            "telefone",
+            "time",
+        ]

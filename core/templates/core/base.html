@@ -1,16 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>Sistema</title>
+    <meta charset="UTF-8">
+    <title>{% block title%}Sistema{% endblock%}</title>
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 </head>
+
+
 <body>
-    {% if user.is_authenticated %}
-        Logado como {{ user.username }} |
-        <a href="{% url 'logout' %}">Logout</a>
-    {% endif %}
+    <nav class="navbar navbar-dark bg-dark px-4">
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <strong>Gestor de Atletas</strong>
+        </a>
+        <div class="ms-auto">
+            {% if user.is_authenticated %}
+                <span class="text-white me-3"> Logado como {{ user.username }} </span>
+                <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm">Login</a>
+            {% endif %}
+        </div>
+    </nav>
 
-    <hr>
-
-    {% block content %}{% endblock %}
+    <div class="container mt-4">
+        {% block content %}
+        {% endblock %}
+    </div>
 </body>
 </html>
