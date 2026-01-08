@@ -2,8 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect
 from .services import criar_aluno
-from .models import Aluno, Escola
-from .forms import AlunoForm, EscolaForm, observador_tecnicoForm
+from .models import Aluno, Escola, Observador_tecnico
+from .forms import AlunoForm, EscolaForm, Observador_tecnicoForm
 from django.contrib.auth.models import Group
 
 def  home_view(request):
@@ -12,8 +12,16 @@ def  home_view(request):
 
 
 def cadastro_view(request):
-    escola_form = EscolaForm(request.POST or None, prefix="escola")
-    observador_tecnico_form = observador_tecnicoForm(request.POST or None, prefix="observador_tecnico")
+    escola_form = EscolaForm(
+        request.POST or None,
+        request.FILES or None, 
+        prefix="escola")
+    
+    observador_tecnico_form = Observador_tecnicoForm(
+        request.POST or None,
+        request.FILES or None, 
+        prefix="observador_tecnico"
+    )
 
     if request.method == "POST":
         tipo = request.POST.get("tipo")
@@ -37,19 +45,19 @@ def cadastro_view(request):
                 celular=escola_form.cleaned_data["celular"], 
                 cidade=escola_form.cleaned_data["cidade"],
             )
-            return redirect("login")
+            return redirect("home")
 
 
-        if tipo == "observador_tecnico" and observador_tecnico_form.is_valid():
+        if tipo == "Observador_tecnico" and observador_tecnico_form.is_valid():
             user = observador_tecnico_form.save(commit=False)
             password = observador_tecnico_form.cleaned_data["password"]
             user.set_password(password)
             user.save()
 
-            grupo = Group.objects.get(name="observador_tecnico")
+            grupo = Group.objects.get(name="Observador Técnico")
             user.groups.add(grupo)
 
-            observador_tecnico.objects.create(
+            Observador_tecnico.objects.create(
                 user=user, 
                 nome=observador_tecnico_form.cleaned_data["nome"], 
                 cpf=observador_tecnico_form.cleaned_data["cpf"], 
@@ -69,7 +77,7 @@ def cadastro_view(request):
                 posicoes_preferenciais=observador_tecnico_form.cleaned_data["posicoes_preferenciais"],
             )
 
-            return redirect("login")
+            return redirect("home")
     return render(request, "core/cadastro.html", {
         "escola_form": escola_form, 
         "observador_tecnico_form":observador_tecnico_form,

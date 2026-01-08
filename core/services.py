@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, Group
-from .models import Escola, Aluno, observador_tecnico, Time
+from .models import Escola, Aluno, Observador_tecnico, Time
 
 def criar_escola(dados):
     user = User.objects.create_user(
@@ -38,15 +38,15 @@ def criar_aluno(dados, escola):
 
 
 def criar_observador_tecnico(dados):
-    user = User.objects.create_user(
+    user = Observador_tecnico.objects.create_user(
         username=dados['username'],
         password=dados['password']
     )
 
-    observador_tecnico = observador_tecnico.objects.create(
+    observador_tecnico = Observador_tecnico.objects.create(
         user=user,
-        empresa=dados.get('empresa', '')
+        clube=dados.get('clube', '')
     )
 
-    user.groups.add(Group.objects.get(name='observador_tecnico'))
+    user.groups.add(Group.objects.get(name='Observador_tecnico'))
     return observador_tecnico

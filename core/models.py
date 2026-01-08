@@ -80,51 +80,63 @@ class Aluno(models.Model):
         return self.user.get_full_name() or self.user.username
 
 
-class observador_tecnico(models.Model):
+class Observador_tecnico(models.Model):
+    # Informações de Login (vem do Base Forms) #
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    nome = models.CharField(max_length=150)
-    cpf = models.CharField(max_length=150)
-    celular = models.CharField(max_length=20)
-    cargo = models.CharField(max_length=150)
-    clube = models.CharField(max_length=150)
+
+    # Dados Pessoais #
+    nome = models.CharField(max_length=150, null=True, blank=True)
+    cpf = models.CharField(max_length=150, null=True, blank=True)
+    celular = models.CharField(max_length=20, blank=True, null=True)
     documento_identificacao = models.FileField(
-        upload_to = 'documentos_observador_tecnico/',
+        upload_to = 'documentos_observador_tecnico/', 
+        null=True, 
+        blank=True,
         verbose_name = "Documento de Identificação"
     )
-
     foto_perfil = models.ImageField(
         upload_to = 'fotos_observador_tecnico/',
         blank=True,
         null=True
     )
+    # Dados Profissionais #
+    
+    cargo = models.CharField(max_length=150, null=True, blank=True)
+    clube = models.CharField(max_length=150, null=True, blank=True)
+    telefone = models.CharField(max_length=11, default="")
+    estado = models.CharField(max_length=150, blank=True)
+    cidade = models.CharField(max_length=150, blank=True)
+    endereco = models.CharField(max_length=150, blank=True)
     linkedin = models.URLField(blank=True, null=True)
     certificacoes = models.TextField(
-        blank=True, 
+        blank=True,
+        null=True, 
         verbose_name="Certificações"
     )
     certificacoes_arquivo = models.FileField(
         upload_to='certificacoes_observador_tecnico/',
         blank=True,
+        null=True,
         verbose_name="Comprovante de Certificações"
     )
 
-    estado = models.CharField(max_length=150, blank=True)
-    cidade = models.CharField(max_length=150, blank=True)
-    endereco = models.CharField(max_length=150, blank=True)
-    telefone = models.CharField(max_length=11, default="")
-    notificacoes = models.BooleanField(default=True)
+    # Preferências #
+
     categorias_interesse = MultiSelectField(
         choices=CATEGORIAS,
         max_length=100,
         verbose_name="Categorias de Interesse",
-        blank=True
+        blank=True,
+        null=True
     )
     posicoes_preferenciais = MultiSelectField(
         choices=POSICOES,
         max_length=50,
         verbose_name="Posições Preferenciais",
-        blank=True
+        blank=True,
+        null=True
     )
+    notificacoes = models.BooleanField(default=True)
     
 
     def __str__(self):

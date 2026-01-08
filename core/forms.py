@@ -63,21 +63,29 @@ class EscolaForm(UserBaseForm):
             'celular',
         ]
 
-class observador_tecnicoForm(UserBaseForm):
+class Observador_tecnicoForm(UserBaseForm):
+    # Informações de Login (vem do Base Forms) #
+
     nome = forms.CharField(label="Nome Completo")
-    celular = forms.CharField(label="Celular")
     cpf = forms.CharField(label="CPF")
-    telefone = forms.CharField(label="Telefone")
-    cargo = forms.CharField(label="Cargo/Função")
-    clube = forms.CharField(label="Clube/Empresa")
+    celular = forms.CharField(label="Celular")
     documento_identificacao = forms.FileField(label="Documento de Identificação", required=True)
     foto_perfil = forms.ImageField(label="Foto de Perfil", required=False)
+
+    # Dados Profissionais #
+
+    cargo = forms.CharField(label="Cargo/Função")
+    clube = forms.CharField(label="Clube/Empresa")
+    telefone = forms.CharField(label="Telefone")
+    estado = forms.CharField(label="Estado", required=False)
+    cidade = forms.CharField(label="Cidade", required=False)
+    endereco = forms.CharField(label="Endereço", required=False)
     linkedin = forms.URLField(label="LinkedIn", required=False)
-    certificacoes = forms.CharField(
-        label="Certificações", 
-        widget=forms.Textarea, 
-        required=False
-        )
+    certificacoes = forms.CharField(label="Certificações", required=False)
+    certificacoes_arquivo = forms.FileField(label="Arquivo de Certificações", required=False)
+    
+    # Preferências #
+
     categorias_interesse = forms.MultipleChoiceField(
         choices=CATEGORIAS,
         widget=forms.CheckboxSelectMultiple,
@@ -90,26 +98,13 @@ class observador_tecnicoForm(UserBaseForm):
         label="Posições Preferenciais",
         required=False
     )
-    estado = forms.CharField(label="Estado", required=False)
-    cidade = forms.CharField(label="Cidade", required=False)
-    endereco = forms.CharField(label="Endereço", required=False)
     notificacoes = forms.BooleanField(label="Receber notificações", required=False)
     class Meta(UserBaseForm.Meta):
         fields = UserBaseForm.Meta.fields + [
-            "nome",
-            "cpf",
-            "celular",
-            "telefone",
-            "cargo",
-            "clube",
-            "documento_identificacao",
-            "foto_perfil",
-            "linkedin",
-            "certificacoes",
-            "categorias_interesse",
-            "posicoes_preferenciais",
-            "estado",
-            "cidade",
-            "endereco",
-            "notificacoes",
+            # Login
+            "nome", "cpf", "celular",  "documento_identificacao", "foto_perfil",
+            # Dados Profissionais
+            "cargo", "clube", "telefone","estado", "cidade", "endereco", "linkedin", "certificacoes","certificacoes_arquivo", 
+            # Preferências
+            "categorias_interesse", "posicoes_preferenciais", "notificacoes",
         ]
