@@ -103,18 +103,47 @@ def criar_aluno_view(request):
 
     return render(request, 'core/criar_aluno.html', {'form':form})
 
-def dashboard_redirect(user):
+def redirect_pos_login(request):
+    user = request.user
+    
     if user.is_superuser:
-        return 'admin:index'
+        return redirect('admin:index')
 
     if user.groups.filter(name='Escola').exists():
-        return 'dashboard_escola'
+        return redirect('dashboard')
 
     if user.groups.filter(name='Aluno').exists():
-        return 'dashboard_aluno'
-
-    return 'dashboard_observador_tecnico'
+        return redirect('dashboard')
+    
+    if user.groups.filter(name='Observador Técnico').exists():
+        return redirect('dashboard')
+    
+    return  redirect('home')
 
 @login_required
-def redirect_pos_login(request):
-    return redirect(dashboard_redirect(request.user))
+def dashboard(request):
+    user = request.user
+    nome = None
+
+    if user.groups.filter(name='Escola').exists():
+        tipo = 'escola'
+        nome = user.escola.nome
+
+    elif user.groups.filter(name='Aluno').exists():
+        tipo = 'aluno'
+        nome = user.aluno.nome
+
+    elif user.groups.filter(name='Observador Técnico').exists():
+        tipo = 'observador_tecnico'
+        nome = user.observador_tecnico.nome
+
+    else:
+        return redirect('home')
+    
+    return render(request, 'core/dashboard.html', {
+        'tipo': tipo,
+        'nome': nome
+        })
+
+
+    

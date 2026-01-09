@@ -1,0 +1,16 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+{% if tipo == 'escola' %}
+    <h2>Dashboard da Escola {{ nome }} </h2>
+
+{% elif tipo == 'aluno' %}
+    <h2>Dashboard do Atleta {{ nome }} </h2>
+
+{% elif tipo == 'observador_tecnico' %}
+    <h2>Dashboard do Observador {{ nome }} </h2>
+
+{% endif %}
+
+{% endblock %}

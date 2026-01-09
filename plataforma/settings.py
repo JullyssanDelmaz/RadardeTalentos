@@ -27,8 +27,9 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default = False, cast=bool)
 ALLOWED_HOSTS = ["*"]
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = 'pos_login'
+LOGOUT_REDIRECT_URL = 'home'
 
 # Application definition
 
